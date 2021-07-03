@@ -7,6 +7,6 @@ import gov.nasa.jpf.vm.Verify;
  */
 public class APISimpleExample {
     public static void main(String[] args) {
-        System.out.println(Verify.getBitFlip(0, 1));
+        System.out.println(Verify.getBitFlip((byte)0, 2));
     }
 }

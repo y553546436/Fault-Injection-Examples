@@ -46,7 +46,6 @@ public class BCDEncodedISBN {
         // invalid if more than 13 decimal numbers
         if ((digits >> 52) != 0)
             return false;
-        System.out.println("Im here");
         for (int i = 0; i < 13; ++i) {
             if (getNumber(digits, i) < 0 || getNumber(digits, i) > 9)
                 return false;
