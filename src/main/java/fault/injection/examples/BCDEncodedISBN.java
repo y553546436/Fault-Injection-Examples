@@ -25,7 +25,7 @@ public class BCDEncodedISBN {
     }
 
     // ISBN-10 check
-    public static boolean check10 (@BitFlip(2) long digits) {
+    public static boolean check10 (long digits) {
         for (int i = 0; i < 10; ++i) {
             if (getNumber(digits, i) > 10 || (getNumber(digits, i) == 10 && i != 9))
                 return false;
@@ -52,6 +52,13 @@ public class BCDEncodedISBN {
         return getNumber(digits, 12) == calculate13(digits);
     }
 
+    public static void check10AndPrint (@BitFlip long digits) {
+        digits &= (1l << 40) - 1;
+        if (check10(digits)) {
+            System.out.println("Masked case: " + digits);
+        }
+    }
+
     // given the first 9 digits, generate the 10th, and check that one bit flip will always be detected
     public static void main (String[] args) {
         assert (args[0].length() == 9);
@@ -61,9 +68,6 @@ public class BCDEncodedISBN {
             assert (c >= '0' && c <= '9');
             digits |= ((long) (c - '0')) << (i << 2);
         }
-        digits |= ((long) calculate10(digits)) << (9 << 2);
-        if (check10(digits)) {
-            System.out.println("Masked case: " + digits);
-        }
+        check10AndPrint(digits);
     }
 }
