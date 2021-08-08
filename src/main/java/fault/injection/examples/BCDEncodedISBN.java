@@ -1,6 +1,6 @@
 package fault.injection.examples;
 
-import gov.nasa.jpf.vm.Verify;
+import gov.nasa.jpf.annotation.BitFlip;
 
 /*
  * International Standard Book Number (ISBN) error detection
@@ -25,10 +25,7 @@ public class BCDEncodedISBN {
     }
 
     // ISBN-10 check
-    public static boolean check10 (long digits) {
-        // invalid if more than 10 decimal numbers
-        if ((digits >> 40) != 0)
-            return false;
+    public static boolean check10 (@BitFlip(2) long digits) {
         for (int i = 0; i < 10; ++i) {
             if (getNumber(digits, i) > 10 || (getNumber(digits, i) == 10 && i != 9))
                 return false;
@@ -48,9 +45,6 @@ public class BCDEncodedISBN {
 
     // ISBN-13 check
     public static boolean check13 (long digits) {
-        // invalid if more than 13 decimal numbers
-        if ((digits >> 52) != 0)
-            return false;
         for (int i = 0; i < 13; ++i) {
             if (getNumber(digits, i) < 0 || getNumber(digits, i) > 9)
                 return false;
@@ -68,8 +62,6 @@ public class BCDEncodedISBN {
             digits |= ((long) (c - '0')) << (i << 2);
         }
         digits |= ((long) calculate10(digits)) << (9 << 2);
-        assert (check10(digits));
-        digits = Verify.getBitFlip(digits, 2, 40);
         if (check10(digits)) {
             System.out.println("Masked case: " + digits);
         }
